@@ -1,0 +1,932 @@
+<!DOCTYPE HTML>
+
+<!--JS对象集-->
+<script>
+		var question_1 = {A:"A.100%得到1000元",B:"B.80%得到1250元，20%得到0元",answer:2};
+		var question_2 = {A:"A.100%得到800元",B:"B.80%得到1000元，20%得到0元",answer:2};
+		var question_3 = {A:"A.100%得到600元",B:"B.80%得到750元，20%得到0元",answer:2};
+		var question_4 = {A:"A.100%得到400元",B:"B.80%得到500元，20%得到0元",answer:2};
+		var question_5 = {A:"A.100%得到200元",B:"B.80%得到400元，20%得到0元",answer:2};
+		var question_6 = {A:"A.100%得到1000元",B:"B.50%得到2000元，50%得到0元",answer:2};
+		var question_7 = {A:"A.100%得到800元",B:"B.50%得到1600元，50%得到0元",answer:2};
+		var question_8 = {A:"A.100%得到600元",B:"B.50%得到1200元，50%得到0元",answer:2};
+		var question_9 = {A:"A.100%得到400元",B:"B.50%得到800元，50%得到0元",answer:2};
+		var question_10 = {A:"A.100%得到200元",B:"B.50%得到400元，50%得到0元",answer:2};
+		var question_11 = {A:"A.100%得到1000元",B:"B.20%得到5000元，80%得到0元",answer:2};
+		var question_12 = {A:"A.100%得到800元",B:"B.20%得到4000元，80%得到0元",answer:2};
+		var question_13 = {A:"A.100%得到600元",B:"B.20%得到3000元，80%得到0元",answer:2};
+		var question_14 = {A:"A.100%得到400元",B:"B.20%得到2000元，80%得到0元",answer:2};
+		var question_15 = {A:"A.100%得到200元",B:"B.20%得到1000元，80%得到0元",answer:2};
+		var questionNum = 0,questionNum2 = 0;
+		var questionList_1 = new Array;
+		var questionList_2 = new Array;
+		var answerList = new Array;
+		var spiritList = new Array;
+		var times = 1;
+</script>
+	
+<!-- JS方法集 -->
+<script>
+		//生成问题列表
+		function initQuestionList(type){
+			if(type==1){
+				if (questionList_1.length!=0) {
+				questionList_1.length = 0;
+				}
+				questionList_1.push(question_1,question_2,question_3,question_4,question_5,question_6,question_7,question_8,
+				question_9,question_10,question_11,question_12,question_13,question_14,question_15);
+			}else if(type==2){
+				if (questionList_2.length!=0) {
+				questionList_2.length = 0;
+				}
+				questionList_2.push(question_1,question_2,question_3,question_4,question_5,question_6,question_7,question_8,
+				question_9,question_10,question_11,question_12,question_13,question_14,question_15);
+			}
+
+		}
+
+		//随机数组排序
+		function shuffle(arr){
+			 var len = arr.length;
+			  for(var i = 0; i < len - 1; i++){
+				   var idx = Math.floor(Math.random() * (len - i));
+				   var temp = arr[idx];
+				arr[idx] = arr[len - i - 1];
+				   arr[len - i -1] = temp;
+			  }
+		  return arr;
+		}
+
+		//获取下一个问题编号
+		function getNum(type){
+			if(type==1){
+			return ++questionNum;
+			}else{
+				if(questionNum2==15){
+					questionNum2=0;
+				}
+			return ++questionNum2;
+			}
+		}
+
+		//拼接问题id
+		function getQuestionNum(){
+			var question="15question_"+getNum(1);
+			return question;
+		}
+
+		//更新问题编号
+		function modifyValue(){
+			document.getElementById(getQuestionNum()).innerHTML = getNum(0)+".";
+		}
+
+		//更新问题内容
+		function modifyQesText(){
+			for(var qes=1;qes<=30;qes++)
+			{
+				if(qes<=15){
+					updateQuestion(qes,1);
+				}else{
+					updateQuestion(qes,2);
+				}
+			}
+		}
+		
+		//生成选项
+		function updateQuestion(number,type){
+			var num = number;
+			if (num>15) {
+				num-=15;
+			}
+			if (type==1) {
+				document.getElementById("15question_"+number+"_A").innerHTML = questionList_1[num-1].A;
+				document.getElementById("15question_"+number+"_B").innerHTML = questionList_1[num-1].B;
+			}else if(type==2){
+				document.getElementById("15question_"+number+"_A").innerHTML = questionList_2[num-1].A;
+				document.getElementById("15question_"+number+"_B").innerHTML = questionList_2[num-1].B;
+			}
+		}
+
+		//获取答案
+		function getAnswer(radioName,num) { 
+      		var obj = document.getElementsByName(radioName); //这个是以标签的name来取控件
+			if (num>15) {
+				num-=15;
+				for(var i=0; i<obj.length;i++)  {
+					if(obj[i].checked){
+						if (i%2==0) {
+							questionList_2[num-1].answer = "A";
+							return true;
+						}else{
+							questionList_2[num-1].answer = "B";
+							return true;
+						}
+        			}
+       			}
+			}else{
+				for(var i=0; i<obj.length;i++)  {
+					if(obj[i].checked){
+						if (i%2==0) {
+							questionList_1[num-1].answer = "A";
+							return true;
+						}else{
+							questionList_1[num-1].answer = "B";
+							return true;
+						}
+        			}
+       			}
+			}
+			return false;
+		}
+
+		//生成答案列表
+		function outputAnswerTable(tableNum){
+			initQuestionList(tableNum);
+			if(tableNum==1){
+				for(var i=0;i<questionList_1.length;i++){
+					answerList.push(questionList_1[i].answer+" ");
+				}
+			}else{
+				for(var i=0;i<questionList_2.length;i++){
+					answerList.push(questionList_2[i].answer+" ");
+				}
+			}
+			
+		}
+
+		//提交回调
+		function updateAnswer(){
+			//获取第一次15个问题的答案
+			for(var i=1;i<=15;i++){
+				var qes_A = "question"+i;
+				var check_A = getAnswer(qes_A,i);
+				if(!check_A){
+					alert("请完成所有选项！");
+					return false;
+				}
+			}
+			outputAnswerTable(1);
+			
+			//获取第二次15个问题的答案
+			for(var p=16;p<=30;p++){
+				var qes_B = "question"+p;
+				var check_B = getAnswer(qes_B,p);
+				if(!check_B){
+					alert("请完成所有选项！");
+					return false;
+				}
+			}
+			outputAnswerTable(2);
+
+			//获取心情问题的答案
+			var spiritValue_1 = getSpiritValue(1);
+			var spiritValue_2 = getSpiritValue(2);
+			if(spiritValue_1==-1||spiritValue_2==-1){
+				alert("请完成所有选项！");
+				return false;
+			}
+			//将答案记录进数组
+			spiritList.push(spiritValue_1);
+			spiritList.push(spiritValue_2);
+			
+			if (times==4) {
+				alert("第4轮测试提交成功！请查看测试结果！");
+			}else if(times<4){
+				alert("第"+times+"轮测试提交成功！请开始第"+(times+1)+"轮测试");
+				
+			}
+			clearData();
+			scrollTo(0,0);
+			times++;
+			if (times<=4) {
+				document.getElementById("sendMessage").value="提交第"+times+"轮测试结果";
+				if (times==2) {
+					replaceAudioRes(2);
+				}if (times==4) {
+					replaceAudioRes(1);
+				}
+			}else{
+				finish();
+			}
+			return true;
+		}
+		
+		//一键填空，加快测试效率
+		function test(){
+			for(var i=1;i<=30;i++){
+				var question1 = "15question_"+i+"_A_input";
+				var question2 = "15question_"+i+"_B_input";
+				document.getElementById(question1).checked=true;
+				document.getElementById(question2).checked=false;
+			}
+			//清除心情问题
+			document.getElementById("spirit_1").value=8;
+			document.getElementById("spirit_2").value=8;
+		}
+
+		//清空选项
+		function clearData(){
+			//清除15个问题的选项
+			for(var i=1;i<=30;i++){
+				var question1 = "15question_"+i+"_A_input";
+				var question2 = "15question_"+i+"_B_input";
+				document.getElementById(question1).checked=false;
+				document.getElementById(question2).checked=false;
+			}
+			//清除心情问题
+			document.getElementById("spirit_1").value=-1;
+			document.getElementById("spirit_2").value=-1;
+			//清除听力问题
+			for(var i=1;i<=18;i++){
+				var result = "result_"+i;
+				document.getElementById(result).value="";
+			}
+			questionList_1=shuffle(questionList_1);
+			questionList_2=shuffle(questionList_2);
+			modifyQesText();
+		}
+
+		//获取心情的值
+		function getSpiritValue(type){
+			var spiritId = "spirit_"+type;
+			var v = document.getElementById(spiritId).value;
+			return v;
+		}
+
+		//设置音频播放完毕的监听事件
+		function initAudio(){
+			var audio = document.getElementById("audioRes");
+			audio.loop = false;
+   	 		audio.addEventListener('ended', function () {
+        		replaceAudioRes(0);
+    		}, false);
+		}
+
+		//切换音频
+		function replaceAudioRes(type){
+			var audio = document.getElementById("audioRes");
+			if (type == 0) {
+				audio.src = "";
+			}else{
+				var audioRes = "sounds/sound"+type+".mp3";
+				audio.src = audioRes;
+			}
+			audio.load();
+		}
+
+		//隐藏或显示控件,type为0时隐藏
+		function hideOrShowDiv(name,type) {
+			if (type == 0) {
+				document.getElementById(name).style.display="none";
+			}else{
+				document.getElementById(name).style.display="inline";
+			}
+		}
+		
+		function finish(){
+			//隐藏问卷页面，显示完成界面
+			hideOrShowDiv("main",0);
+			hideOrShowDiv("finish",1);
+			hideOrShowDiv("resultTable",0);
+		}
+
+		//打印选择结果
+		function getResult(){			
+			hideOrShowDiv("resultTable",1);
+			for (var _time=1;_time<=4;_time++){
+				for(var _type=1;_type<=3;_type++){
+					updateTableData(_type,_time);
+				}
+			}
+		}
+		
+		//更新表中数据
+		function updateTableData(_tp,_name){
+			var tdName = "result_"+_tp+"_"+_name;
+			document.getElementById(tdName).innerText = printResult(_tp,_name);
+		}
+
+		//通过type控制打印项目，1为第一个15题，2为第二个15题，3为心情，time控制轮次
+		function printResult(type,time){
+			var string = "";
+			if (type == 1) {
+				for (var index = 0+(30*(time-1)); index < 15+(30*(time-1)); index++) {
+					string+=answerList[index]+" ";
+				}
+			}else if (type == 2) {
+				for (var index = 15+(30*(time-1)); index < 30+(30*(time-1)); index++) {
+					string+=answerList[index]+" ";
+				}
+			}else if (type == 3) {
+				string += spiritList[(2*time-2)]+" "+spiritList[(2*time-1)];
+			}else{
+				return;
+			}
+			return string;
+		}
+
+</script>
+
+
+<html>
+	<head>
+		<title>test1</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+	</head>
+	<body>
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header -->
+				<header id="header" class="alt">
+						<h1><a href="welcome.html">Spectral</a></h1>
+						<nav id="nav">
+							<ul>
+								<li class="special">
+									<a href="#menu" class="menuToggle"><span>菜单</span></a>
+									<div id="menu">
+										<ul>
+											<li><a href="welcome.html">欢迎</a></li>
+											<li><a href="test1.html">测试一</a></li>
+											<li><a href="test2.html">测试二</a></li>
+										</ul>
+									</div>
+								</li>
+							</ul>
+						</nav>
+					</header>
+
+				<!-- Main -->
+					<article id="main">
+						<header>
+							<h2>测试一</h2>
+							<p>请根据提示完成测试</p>
+						</header>
+						<script>
+							initQuestionList(1);
+							questionList_1=shuffle(questionList_1);
+						</script>
+						<section class="wrapper style5">
+							<div class="inner">
+								<div  id="15questions_first">
+										<h3>请选择您更偏向的选项</h3>
+												<div class="row uniform">
+														<p id="15question_1"></p>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_1_A_input" name="question1" value="A">
+															<label id="15question_1_A" for="15question_1_A_input"></label>
+														</div>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_1_B_input" name="question1" value="B">
+															<label id="15question_1_B" for="15question_1_B_input"></label>
+														</div>
+													</div>
+													<div class="row uniform">
+														<p id="15question_2"></p>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_2_A_input" name="question2" value="A">
+															<label id="15question_2_A" for="15question_2_A_input"></label>
+														</div>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_2_B_input" name="question2" value="B">
+															<label id="15question_2_B" for="15question_2_B_input"></label>
+														</div>
+													</div>
+													<div class="row uniform">
+														<p id="15question_3"></p>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_3_A_input" name="question3">
+															<label id="15question_3_A" for="15question_3_A_input"></label>
+														</div>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_3_B_input" name="question3">
+															<label id="15question_3_B" for="15question_3_B_input"></label>
+														</div>
+													</div>
+													<div class="row uniform">										
+														<p id="15question_4"></p>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_4_A_input" name="question4">
+															<label id="15question_4_A" for="15question_4_A_input"></label>
+														</div>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_4_B_input" name="question4">
+															<label id="15question_4_B" for="15question_4_B_input"></label>
+														</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_5"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_5_A_input" name="question5">
+																<label id="15question_5_A" for="15question_5_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_5_B_input" name="question5">
+																<label id="15question_5_B" for="15question_5_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_6"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_6_A_input" name="question6">
+																<label id="15question_6_A" for="15question_6_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_6_B_input" name="question6">
+																<label id="15question_6_B" for="15question_6_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_7"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_7_A_input" name="question7">
+																<label id="15question_7_A" for="15question_7_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_7_B_input" name="question7">
+																<label id="15question_7_B" for="15question_7_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_8"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_8_A_input" name="question8">
+																<label id="15question_8_A" for="15question_8_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_8_B_input" name="question8">
+																<label id="15question_8_B" for="15question_8_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_9"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_9_A_input" name="question9">
+																<label id="15question_9_A" for="15question_9_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_9_B_input" name="question9">
+																<label id="15question_9_B" for="15question_9_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_10"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_10_A_input" name="question10">
+																<label id="15question_10_A" for="15question_10_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_10_B_input" name="question10">
+																<label id="15question_10_B" for="15question_10_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_11"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_11_A_input" name="question11">
+																<label id="15question_11_A" for="15question_11_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_11_B_input" name="question11">
+																<label id="15question_11_B" for="15question_11_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_12"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_12_A_input" name="question12">
+																<label id="15question_12_A" for="15question_12_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_12_B_input" name="question12">
+																<label id="15question_12_B" for="15question_12_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_13"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_13_A_input" name="question13">
+																<label id="15question_13_A" for="15question_13_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_13_B_input" name="question13">
+																<label id="15question_13_B" for="15question_13_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_14"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_14_A_input" name="question14">
+																<label id="15question_14_A" for="15question_14_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_14_B_input" name="question14">
+																<label id="15question_14_B" for="15question_14_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_15"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_15_A_input" name="question15">
+																<label id="15question_15_A" for="15question_15_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_15_B_input" name="question15">
+																<label id="15question_15_B" for="15question_15_B_input"></label>
+															</div>
+													</div>
+													<hr />
+								</div>
+								
+								<section>
+								<h4>请用数字表达当前的心情，数字越大心情越好！</h4>
+								<div class="select-wrapper">
+										<select name="spirit_1" id="spirit_1">
+											<option value="-1">- 请选择您的心情指数 -</option>
+											<option value="0">0</option>
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+										</select>
+								</div>
+								</section>
+								<hr />
+								<section>
+									<h4>请听下面一段录音，写出录音中对应题目的答案：</h4>
+									<audio controls id="audioRes"	>
+											<source src="sounds/sound1.mp3" type="audio/mpeg">
+											您的浏览器不支持 audio 元素。
+									</audio>
+									<script>
+										initAudio();
+									</script>
+									<p></p>
+									<div class="row uniform">
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_1" value="" placeholder="-1-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_2" value="" placeholder="-2-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_3" value="" placeholder="-3-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_4" value="" placeholder="-4-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_5" value="" placeholder="-5-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_6" value="" placeholder="-6-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_7" value="" placeholder="-7-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_8" value="" placeholder="-8-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_9" value="" placeholder="-9-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_10" value="" placeholder="-10-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_11" value="" placeholder="-11-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_12" value="" placeholder="-12-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_13" value="" placeholder="-13-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_14" value="" placeholder="-14-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_15" value="" placeholder="-15-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_16" value="" placeholder="-16-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_17" value="" placeholder="-17-" />
+									</div>
+									<div class="6u 12u$(xsmall)">
+										<input type="text" id="result_18" value="" placeholder="-18-" />
+									</div>
+								</div>
+								<hr />
+										<h4>完成上述题目后，请再次用数字表达当前的心情，数字越大心情越好！</h4>
+										<div class="select-wrapper">
+												<select name="spirit_2" id="spirit_2">
+													<option value="-1">- 请选择您的心情指数 -</option>
+													<option value="0">0</option>
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+												</select>
+										</div>
+								</section>
+								<hr />
+								<div  id="15questions_second">
+										<h3>请再次选择您更偏向的选项</h3>
+											<script>
+												initQuestionList(2);
+												questionList_2=shuffle(questionList_2);
+											</script>
+												<div class="row uniform">
+														<p id="15question_16"></p>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_16_A_input" name="question16" value="A">
+															<label id="15question_16_A" for="15question_16_A_input"></label>
+														</div>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_16_B_input" name="question16" value="B">
+															<label id="15question_16_B" for="15question_16_B_input"></label>
+														</div>
+													</div>
+													<div class="row uniform">
+														<p id="15question_17"></p>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_17_A_input" name="question17" value="A">
+															<label id="15question_17_A" for="15question_17_A_input"></label>
+														</div>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_17_B_input" name="question17" value="B">
+															<label id="15question_17_B" for="15question_17_B_input"></label>
+														</div>
+													</div>
+													<div class="row uniform">
+														<p id="15question_18"></p>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_18_A_input" name="question18">
+															<label id="15question_18_A" for="15question_18_A_input"></label>
+														</div>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_18_B_input" name="question18">
+															<label id="15question_18_B" for="15question_18_B_input"></label>
+														</div>
+													</div>
+													<div class="row uniform">										
+														<p id="15question_19"></p>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_19_A_input" name="question19">
+															<label id="15question_19_A" for="15question_19_A_input"></label>
+														</div>
+														<div class="4u 12u$(small)">
+															<input type="radio" id="15question_19_B_input" name="question19">
+															<label id="15question_19_B" for="15question_19_B_input"></label>
+														</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_20"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_20_A_input" name="question20">
+																<label id="15question_20_A" for="15question_20_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_20_B_input" name="question20">
+																<label id="15question_20_B" for="15question_20_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_21"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_21_A_input" name="question21">
+																<label id="15question_21_A" for="15question_21_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_21_B_input" name="question21">
+																<label id="15question_21_B" for="15question_21_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_22"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_22_A_input" name="question22">
+																<label id="15question_22_A" for="15question_22_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_22_B_input" name="question22">
+																<label id="15question_22_B" for="15question_22_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_23"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_23_A_input" name="question23">
+																<label id="15question_23_A" for="15question_23_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_23_B_input" name="question23">
+																<label id="15question_23_B" for="15question_23_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_24"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_24_A_input" name="question24">
+																<label id="15question_24_A" for="15question_24_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_24_B_input" name="question24">
+																<label id="15question_24_B" for="15question_24_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_25"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_25_A_input" name="question25">
+																<label id="15question_25_A" for="15question_25_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_25_B_input" name="question25">
+																<label id="15question_25_B" for="15question_25_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_26"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_26_A_input" name="question26">
+																<label id="15question_26_A" for="15question_26_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_26_B_input" name="question26">
+																<label id="15question_26_B" for="15question_26_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_27"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_27_A_input" name="question27">
+																<label id="15question_27_A" for="15question_27_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_27_B_input" name="question27">
+																<label id="15question_27_B" for="15question_27_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_28"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_28_A_input" name="question28">
+																<label id="15question_28_A" for="15question_28_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_28_B_input" name="question28">
+																<label id="15question_28_B" for="15question_28_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_29"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_29_A_input" name="question29">
+																<label id="15question_29_A" for="15question_29_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_29_B_input" name="question29">
+																<label id="15question_29_B" for="15question_29_B_input"></label>
+															</div>
+													</div>
+													<div class="row uniform">
+															<p id="15question_30"></p>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_30_A_input" name="question30">
+																<label id="15question_30_A" for="15question_30_A_input"></label>
+															</div>
+															<div class="4u 12u$(small)">
+																<input type="radio" id="15question_30_B_input" name="question30">
+																<label id="15question_30_B" for="15question_30_B_input"></label>
+															</div>
+															<script>
+																//更新问题标签
+																for(var index=0;index<30;index++){
+																	modifyValue();
+																}
+																//更新问题内容
+																modifyQesText()
+															</script>
+													</div>
+								</div>
+								<hr />
+								<div class="12u$">
+									<ul class="actions">
+										<li><input type="submit" value="提交第1轮测试结果" class="special" onclick="updateAnswer()" id="sendMessage"/></li>
+										<!-- <li><input type="reset" value="清空" onclick="clearData()"/></li> -->
+										<!-- <li><input type="reset" value="测试" onclick="test()"/></li> -->
+									</ul>
+								</div>
+								
+								
+							</div>
+
+					</article>
+
+					<article id="finish">
+							<section class="wrapper style5">
+									<div class="inner">
+										<h2>恭喜你完成测试！</h2>
+										<div class="12u$">
+											<ul class="actions">
+												<li><input type="submit" value="查看测试结果" class="special" onclick="getResult()" id="getResult"/></li>
+											</ul>
+										</div>
+										<div class="table-wrapper" id="resultTable">
+												<table class="alt">
+													<thead>
+														<tr>
+															<th>测试轮次</th>
+															<th>第一次15题选项</th>
+															<th>第二次15题选项</th>
+															<th>心情选项</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>第一轮</td>
+															<td id="result_1_1"></td>
+															<td id="result_2_1"></td>
+															<td id="result_3_1"></td>
+														</tr>
+														<tr>
+															<td>第二轮</td>
+															<td id="result_1_2"></td>
+															<td id="result_2_2"></td>
+															<td id="result_3_2"></td>
+														</tr>
+														<tr>
+															<td>第三轮</td>
+															<td id="result_1_3"></td>
+															<td id="result_2_3"></td>
+															<td id="result_3_3"></td>
+														</tr>
+														<tr>
+															<td>第四轮</td>
+															<td id="result_1_4"></td>
+															<td id="result_2_4"></td>
+															<td id="result_3_4"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<script>
+												hideOrShowDiv("finish",0);
+											</script>
+									</div>
+							</section>
+					</article>			
+						
+				<!-- Footer -->
+				<footer id="footer">
+						<ul class="icons">
+							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+							<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+							<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
+						</ul>
+						<ul class="copyright">
+							<li>&copy; Untitled</li><li>Design: LePengTian </li>
+						</ul>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+			
+
+			
+
+
+	</body>
+</html>
